@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HUNAIN // COMMAND CENTER</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">⬡ HUNAIN OS</div>
+  <div class="nav-tabs">
+    <button class="nav-tab" data-page="home"><span>⌂ Home</span></button>
+    <button class="nav-tab" data-page="body"><span>⬡ Body</span></button>
+    <button class="nav-tab" data-page="university"><span>◈ University</span></button>
+    <button class="nav-tab" data-page="wealth"><span>◆ Wealth</span></button>
+    <button class="nav-tab" data-page="spirit"><span>☽ Spirit</span></button>
+  </div>
+</nav>
+
+<!-- DATETIME -->
+<div class="datetime-display" id="datetimeDisplay">
+  <div class="datetime-date" id="dateLabel">FRIDAY</div>
+  <div class="datetime-time" id="clockDisplay">00:00</div>
+  <div class="datetime-full" id="dateFull">Loading...</div>
+</div>
+
+<!-- WEATHER WIDGET -->
+<div class="weather-widget" id="weatherWidget">
+  <div class="weather-location" id="weatherLocation">Brussels, BE</div>
+  <div class="weather-temp" id="weatherTemp">--°C</div>
+  <div class="weather-desc" id="weatherDesc">Fetching weather...</div>
+  <div class="weather-extra">
+    <span>💧 <span id="weatherHumid">--</span>%</span>
+    <span>🌬 <span id="weatherWind">--</span> km/h</span>
+  </div>
+</div>
+
+<!-- ===== HOME PAGE ===== -->
+<div class="page" id="home">
+  <div class="home-inner">
+    <div class="home-center">
+      <div class="greeting-text">
+        <div class="greeting-time" id="greetingTime">Good Evening</div>
+        <div class="greeting-name">Master Hunain</div>
+        <div class="greeting-quote" id="greetingQuote"></div>
+      </div>
+      <div class="home-middle">
+        <div class="orb-rings">
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <canvas id="globe-canvas" width="340" height="340"></canvas>
+        </div>
+      </div>
+      <div class="start-btn-wrap">
+        <button class="start-btn" id="startBtn"><span>▶ START TODAY'S LOG</span></button>
+      </div>
+    </div>
+
+    <!-- Next Lessons Panel -->
+    <div class="next-lessons-panel" id="nextLessonsPanel">
+      <div class="next-lessons-title">NEXT UP</div>
+      <div class="next-lessons-list" id="nextLessonsList">
+        <div class="next-lesson-loading">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BODY PAGE ===== -->
+<div class="page" id="body-page">
+  <div class="page-header">
+    <div class="page-title">Body</div>
+    <div class="page-subtitle">Track your physical progress and workout plan</div>
+  </div>
+
+  <div class="body-layout">
+    <div class="body-main">
+
+      <!-- Weight chart -->
+      <div class="panel">
+        <div class="panel-title">Weight Timeline</div>
+        <div style="position:relative;height:220px;width:100%"><canvas id="weightCanvas"></canvas></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="currentWeight">--</div>
+          <div class="stat-label">Current kg</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="startWeight">--</div>
+          <div class="stat-label">Starting kg</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="weightDelta">--</div>
+          <div class="stat-label">Δ Change</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="bmiCard">--</div>
+          <div class="stat-label">BMI</div>
+        </div>
+      </div>
+
+      <!-- Today's Workout -->
+      <div class="panel" id="todayWorkoutPanel">
+        <div class="panel-title" id="todayWorkoutTitle">Today's Workout</div>
+        <div id="todayWorkoutContent"></div>
+      </div>
+
+      <!-- Workout Contribution Graph -->
+      <div class="panel">
+        <div class="panel-title">Workout Activity — Last 6 Months</div>
+        <div class="contribution-graph" id="contributionGraph"></div>
+        <div class="contribution-legend">
+          <span class="legend-box" style="background:rgba(255,255,255,0.06)"></span> Rest / No Log
+          <span class="legend-box" style="background:rgba(124,58,237,0.65)"></span> Partial
+          <span class="legend-box" style="background:#10b981"></span> Done
+        </div>
+      </div>
+
+      <!-- Today's nutrition -->
+      <div class="panel">
+        <div class="panel-title">Today's Nutrition</div>
+        <div class="nutrition-bars" id="nutritionBars">
+          <div class="nut-bar-row">
+            <span class="nut-label">Calories</span>
+            <div class="nut-bar-track"><div class="nut-bar-fill" id="calBar" style="width:0%;background:linear-gradient(90deg,#f59e0b,#ef4444)"></div></div>
+            <span class="nut-value" id="calVal">0 kcal</span>
+          </div>
+          <div class="nut-bar-row">
+            <span class="nut-label">Protein</span>
+            <div class="nut-bar-track"><div class="nut-bar-fill" id="protBar" style="width:0%;background:linear-gradient(90deg,#3b82f6,#a855f7)"></div></div>
+            <span class="nut-value" id="protVal">0g</span>
+          </div>
+          <div class="nut-bar-row">
+            <span class="nut-label">Carbs</span>
+            <div class="nut-bar-track"><div class="nut-bar-fill" id="carbBar" style="width:0%;background:linear-gradient(90deg,#10b981,#3b82f6)"></div></div>
+            <span class="nut-value" id="carbVal">0g</span>
+          </div>
+          <div class="nut-bar-row">
+            <span class="nut-label">Fat</span>
+            <div class="nut-bar-track"><div class="nut-bar-fill" id="fatBar" style="width:0%;background:linear-gradient(90deg,#f59e0b,#10b981)"></div></div>
+            <span class="nut-value" id="fatVal">0g</span>
+          </div>
+          <div class="nut-bar-row">
+            <span class="nut-label">Water</span>
+            <div class="nut-bar-track"><div class="nut-bar-fill" id="waterBar" style="width:0%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></div></div>
+            <span class="nut-value" id="waterVal">0L</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Body side panel -->
+    <div class="body-side">
+      <div class="body-diagram-panel">
+        <div class="panel-title">Body Diagram</div>
+        <div class="body-svg-wrap">
+          <img src="img/body_diagram.png" alt="Muscular body diagram" class="body-diagram-img">
+        </div>
+        <div style="font-size:0.75rem;color:var(--text3);text-align:center;margin-top:0.5rem">
+          BMI: <span id="bmiVal" style="color:var(--cyan)">--</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== UNIVERSITY PAGE ===== -->
+<div class="page" id="university-page">
+  <div class="page-header">
+    <div class="prog-header-row">
+      <div>
+        <div class="page-title">University</div>
+        <div class="page-subtitle">Track your academic progress across all subjects</div>
+      </div>
+    </div>
+  </div>
+  <div class="subject-tabs" id="subjectTabs"></div>
+  <div id="subjectContents"></div>
+</div>
+
+<!-- ===== WEALTH PAGE ===== -->
+<div class="page" id="wealth-page">
+  <div class="ict-header">
+    <div>
+      <div class="ict-logo">ICT</div>
+      <div class="ict-tagline">Inner Circle Trader — Smart Money Concepts Mastery</div>
+    </div>
+    <div style="margin-left:auto;text-align:right">
+      <div style="font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--cyan),var(--purple2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="ictPctDisplay">0%</div>
+      <div style="font-size:0.75rem;color:var(--text3)">Overall Progress</div>
+    </div>
+  </div>
+  <div class="wealth-layout">
+    <div class="playlist-sidebar" id="playlistSidebar"></div>
+    <div class="videos-panel" id="videosPanel">
+      <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text3);font-family:'Rajdhani',sans-serif;letter-spacing:0.1em;">
+        SELECT A PLAYLIST
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SPIRIT PAGE ===== -->
+<div class="page" id="spirit-page">
+  <div class="page-header">
+    <div class="page-title">Spirit</div>
+    <div class="page-subtitle">Daily prayers and spiritual practice</div>
+  </div>
+
+  <div class="spirit-layout">
+    <div class="spirit-main">
+      <!-- Today's Prayers -->
+      <div class="panel">
+        <div class="panel-title">Today's Prayers</div>
+        <div class="prayers-grid" id="prayersGrid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Quran Reading -->
+      <div class="panel">
+        <div class="panel-title">Daily Quran</div>
+        <div class="quran-card" id="quranCard">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div class="spirit-side">
+      <!-- Today's Summary -->
+      <div class="panel">
+        <div class="panel-title">Today's Summary</div>
+        <div class="spirit-summary" id="spiritSummary"></div>
+      </div>
+
+      <!-- Prayer Streak / Heatmap -->
+      <div class="panel">
+        <div class="panel-title">Prayer Activity</div>
+        <div class="prayer-heatmap" id="prayerHeatmap"></div>
+        <div class="contribution-legend" style="margin-top:0.75rem">
+          <span class="legend-box" style="background:rgba(255,255,255,0.06)"></span> None
+          <span class="legend-box" style="background:rgba(168,85,247,0.3)"></span> 1–2
+          <span class="legend-box" style="background:rgba(168,85,247,0.6)"></span> 3–4
+          <span class="legend-box" style="background:#a855f7"></span> 5+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAILY LOG MODAL -->
+<div class="modal-overlay" id="dailyModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title-row">
+        <div class="modal-title">Daily Log</div>
+        <input type="date" id="modalDateInput" onchange="onModalDateChange(this.value)">
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <!-- Weight -->
+    <div class="form-section">
+      <div class="form-section-title">Body Weight</div>
+      <div class="nutrition-grid" style="grid-template-columns:1fr 1fr">
+        <div class="form-field">
+          <label>Weight (kg)</label>
+          <input type="number" id="todayWeight" step="0.1" placeholder="83.9">
+        </div>
+      </div>
+    </div>
+
+    <!-- Nutrition -->
+    <div class="form-section">
+      <div class="form-section-title">Nutrition Intake</div>
+      <div class="nutrition-grid">
+        <div class="form-field">
+          <label>Calories (kcal)</label>
+          <input type="number" id="calories" placeholder="2000">
+        </div>
+        <div class="form-field">
+          <label>Protein (g)</label>
+          <input type="number" id="protein" placeholder="150">
+        </div>
+        <div class="form-field">
+          <label>Carbohydrates (g)</label>
+          <input type="number" id="carbs" placeholder="250">
+        </div>
+        <div class="form-field">
+          <label>Fat (g)</label>
+          <input type="number" id="fat" placeholder="70">
+        </div>
+        <div class="form-field">
+          <label>Water (L)</label>
+          <input type="number" id="water" step="0.1" placeholder="2.5">
+        </div>
+      </div>
+    </div>
+
+    <!-- Prayers -->
+    <div class="form-section">
+      <div class="form-section-title">Prayers</div>
+      <div class="prayer-log-grid">
+        <label class="prayer-log-item">
+          <input type="checkbox" id="pFajr"> <span>Fajr</span>
+        </label>
+        <label class="prayer-log-item">
+          <input type="checkbox" id="pZuhr"> <span>Zuhr</span>
+        </label>
+        <label class="prayer-log-item">
+          <input type="checkbox" id="pAsr"> <span>Asr</span>
+        </label>
+        <label class="prayer-log-item">
+          <input type="checkbox" id="pMaghrib"> <span>Maghrib</span>
+        </label>
+        <label class="prayer-log-item">
+          <input type="checkbox" id="pIsha"> <span>Isha</span>
+        </label>
+        <label class="prayer-log-item">
+          <input type="checkbox" id="pQuran"> <span>Quran (1 page)</span>
+        </label>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="submitDailyLog()">⬡ SAVE LOG</button>
+  </div>
+</div>
+
+<!-- Notes sidebar -->
+<div class="notes-sidebar" id="notesSidebar">
+  <div class="notes-header">
+    <div class="notes-video-title" id="notesVideoTitle">Video Notes</div>
+    <button class="notes-close" onclick="closeNotes()">✕</button>
+  </div>
+  <div style="font-size:0.72rem;color:var(--text3);font-family:'Rajdhani',sans-serif;letter-spacing:0.05em">VIDEO NOTES</div>
+  <textarea class="notes-textarea" id="notesTextarea" placeholder="Write your notes here...&#10;&#10;Key concepts, observations, trade setups..."></textarea>
+  <button class="notes-save-btn" onclick="saveNotes()">⬡ Save Notes</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="js/data/app-data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
