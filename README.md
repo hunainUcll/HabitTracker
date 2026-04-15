@@ -1,5 +1,5 @@
-# Hunain Command Center
-
+# Hunain's Habit Tracker
+ 
 ## Setup
 1. Install Node.js (v18+) if not installed
 2. Run: `cd backend && npm install`
